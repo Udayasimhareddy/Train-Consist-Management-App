@@ -1,45 +1,58 @@
 
-      import java.util.LinkedHashSet;
+            import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 
-        public class t_c_s_m {
-            public static void main(String[] args) {
-                Scanner scanner = new Scanner(System.in);
-                // LinkedHashSet: Ensures uniqueness AND maintains insertion order
-                Set<String> trainFormation = new LinkedHashSet<>();
+            public class t_c_s_m {
+                public static void main(String[] args) {
+                    Scanner scanner = new Scanner(System.in);
+                    // HashMap<Key: Bogie Name, Value: Capacity>
+                    Map<String, Integer> bogieCapacities = new HashMap<>();
 
-                System.out.println("=== UC5: Ordered Unique Train Formation (User-Defined) ===");
-                System.out.println("Enter bogies to attach. Type 'done' to finish.");
+                    System.out.println("=== UC6: Bogie Capacity Mapping (User-Defined) ===");
+                    System.out.println("Enter bogie details. Type 'done' as the name to finish.");
 
-                while (true) {
-                    System.out.print("Enter Bogie Name: ");
-                    String bogie = scanner.nextLine();
+                    while (true) {
+                        System.out.print("\nEnter Bogie Name (e.g., Sleeper): ");
+                        String name = scanner.nextLine();
 
-                    if (bogie.equalsIgnoreCase("done")) {
-                        break;
+                        if (name.equalsIgnoreCase("done")) {
+                            break;
+                        }
+
+                        System.out.print("Enter Seating Capacity for " + name + ": ");
+                        // Use try-catch or validation to ensure an integer is entered
+                        try {
+                            int capacity = Integer.parseInt(scanner.nextLine());
+
+                            // .put() inserts or updates the mapping
+                            bogieCapacities.put(name, capacity);
+                            System.out.println(">> Mapped: " + name + " -> " + capacity + " seats.");
+                        } catch (NumberFormatException e) {
+                            System.out.println(">> Error: Please enter a valid numeric capacity.");
+                        }
                     }
 
-                    // add() returns false if the element already exists
-                    boolean isAdded = trainFormation.add(bogie);
-
-                    if (isAdded) {
-                        System.out.println(">> " + bogie + " successfully attached to the formation.");
+                    // --- Iterating and Displaying Results ---
+                    System.out.println("\n--- Final Bogie Capacity Report ---");
+                    if (bogieCapacities.isEmpty()) {
+                        System.out.println("No capacity data recorded.");
                     } else {
-                        System.out.println(">> Duplicate Alert! " + bogie + " is already in the formation. Entry ignored.");
+                        // Using entrySet() to access both Key and Value efficiently
+                        for (Map.Entry<String, Integer> entry : bogieCapacities.entrySet()) {
+                            System.out.println("Bogie Type: " + entry.getKey() + " | Capacity: " + entry.getValue() + " seats");
+                        }
                     }
-                }
 
-                // Display the final formation
-                System.out.println("\n--- Final Train Formation (In Order) ---");
-                if (trainFormation.isEmpty()) {
-                    System.out.println("The train is empty.");
-                } else {
-                    // Because it's a LinkedHashSet, this will print in the exact order entered
-                    System.out.println(String.join(" -> ", trainFormation));
-                }
+                    // --- Fast Lookup Example ---
+                    System.out.print("\nQuick Search: Enter a bogie name to check capacity: ");
+                    String searchKey = scanner.nextLine();
+                    if (bogieCapacities.containsKey(searchKey)) {
+                        System.out.println("Result: " + searchKey + " has a capacity of " + bogieCapacities.get(searchKey) + ".");
+                    } else {
+                        System.out.println("Result: No data found for '" + searchKey + "'.");
+                    }
 
-                System.out.println("Total Unique Bogies: " + trainFormation.size());
-                scanner.close();
+                    scanner.close();
+                }
             }
-        }
